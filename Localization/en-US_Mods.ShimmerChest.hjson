@@ -1,0 +1,9 @@
+Tiles.ShimmerChest.MapEntry0: Mods.ShimmerChest.Tiles.ShimmerChest.MapEntry0
+Keybinds.QuickStackShimmerChest.DisplayName: Quick Stack Shimmer Chest
+
+Items: {
+	ShimmerChest: {
+		DisplayName: Shimmer Chest
+		Tooltip: ""
+	}
+}
