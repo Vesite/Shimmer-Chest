@@ -17,9 +17,10 @@ This mod currently very janky as it is the first mod I have made and I dont know
 - [ ] Bug, the UI Stays if we dont close it and relog the world, can crash.
 - [ ] Make the buttons disable using items when clicking them. 
 - [ ] Ideally non-stackable items would keep their modifiers when taken out if the chest, I think it would work if i store data as a list of Item-objects.
-- [ ] UI would change if we added any item with a modifier, so that it would look like a normal chest / look like magic storage UI with a scroll-bar. This would allow us to grab the modifier we want. Or it could be 1 slot for each modifier (would be neat for completionist?, collect one of each modifier for the stored item). 
-
-
+- [ ] UI would change if we added any item with a modifier, so that it would look like a normal chest / look like magic storage UI with a scroll-bar. This would allow us to grab the modifier we want. Or it could be 1 slot for each modifier (would be neat for completionist?, collect one of each modifier for the stored item).
+- [ ] Change the recipe to be made from throwing any chest into shimmer? This would make it not possible to un-craft normal chests.
+  
+  
 
 - [X] The text of the UI is wrong / its global stored.
 - [X] Data does not get saved on relogs.
