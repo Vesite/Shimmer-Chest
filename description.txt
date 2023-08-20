@@ -1,2 +1,8 @@
-Shimmer Chest can store an infinite amount of a single item type  
-Currently does not work in multiplayer  
+Shimmer Chest can store an infinite amount of a single item type
+Currently does not work in multiplayer
+Crafted from 8 Aetherium Brick and 2 any Iron Bar
+
+This mod currently a bit janky as it is my first mod.
+Requesting commits to improve the mod is very welcome!
+
+Link to GitHub Repository: https://github.com/Vesite/Shimmer-Chest
