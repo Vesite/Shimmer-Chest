@@ -7,8 +7,8 @@ For example with Shimmer Chests its possible to store all items from a pumpkin m
 I wanted to make it mostly for personal use in late game vanilla worlds  
 I posted this concept as a [suggestion on the Terraria forums](https://forums.terraria.org/index.php?threads/infinite-chests-for-single-items.115468/).  
 [Steam Workshop Page](https://steamcommunity.com/sharedfiles/filedetails/?id=3023014857)   
-This mod currently very janky as it is the first mod I have made and I dont know how to fix most of the issues listed below.
-If you are an experienced modder and want to help by requesting commits it is very welcome!  
+This mod currently a bit janky as it is the first mod I have made and I don't know how to fix most of the issues listed below.
+Requesting commits to improve the mod is very welcome!  
 
 
 
