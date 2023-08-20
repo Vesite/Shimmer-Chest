@@ -1,1 +1,2 @@
-Shimmer Chest can store an infinite amount of a single item type
+Shimmer Chest can store an infinite amount of a single item type  
+Currently does not work in multiplayer  
