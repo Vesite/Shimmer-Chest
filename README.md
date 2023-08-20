@@ -8,7 +8,7 @@ I wanted to make it mostly for personal use in late game vanilla worlds
 I posted this concept as a [suggestion on the Terraria forums](https://forums.terraria.org/index.php?threads/infinite-chests-for-single-items.115468/).  
 [Steam Workshop Page](https://steamcommunity.com/sharedfiles/filedetails/?id=3023014857)   
 This mod currently a bit janky as it is the first mod I have made and I don't know how to fix most of the issues listed below.
-Requesting commits to improve the mod is very welcome!  
+If you want to fix some of my issues and improve the mod pull requests are very welcome!  
 
 
 
