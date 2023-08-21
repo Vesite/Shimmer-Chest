@@ -10,11 +10,9 @@ namespace ShimmerChest.Furniture
 {
 	public class ShimmerChestTileEntity : ModTileEntity
 	{
-         
-        // These are field initialised values
-        public int storedItemID = 0; // If we are not empty this one will have a value, otherwise it will not be defined?
-		public int storedItemAmount = 0;
-		public bool isEmpty = true; // If we take out all items some later time i will leave "storedItemID" and set isEmpty to true
+        
+        // The list that stores all the data in the chest
+        public List<Item> chestInventoryList = new List<Item>();
 
         public override bool IsTileValidForEntity(int x, int y)
         {
@@ -22,7 +20,6 @@ namespace ShimmerChest.Furniture
             return tile.HasTile && tile.TileType == ModContent.TileType<ShimmerChest>();
         }
 
-        
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction, int alternate)
         {   
             // This gave some errors
@@ -31,10 +28,8 @@ namespace ShimmerChest.Furniture
                 // Sync the entire multitile's area.  Modify "width" and "height" to the size of your multitile in tiles
                 int width = 2;
                 int height = 2;
-
-                //Main.NewText($"Net");
                 
-                //Replaced with this from "SendTileRange" (error)
+                // This was "SendTileRange" but i gave an error?
                 NetMessage.SendTileSquare(Main.myPlayer, i, j, width, height);
 
                 // Sync the placement of the tile entity with other clients
@@ -59,65 +54,31 @@ namespace ShimmerChest.Furniture
         }
 
         // Save data for items stored
-        public override void SaveData(TagCompound tag) {
-            tag["isEmpty"] = GetIsEmpty();
-			tag["storedItemID"] = GetStoredItemID();
-			tag["storedItemAmount"] = GetStoredItemAmount();
+        public override void SaveData(TagCompound tag) { 
+            tag["chestInventoryList"] = chestInventoryList;
         }
 
         // Load data for items stored
 		public override void LoadData(TagCompound tag) {
-            SetIsEmpty(tag.GetBool("isEmpty"));
-			SetstoredItemID(tag.GetInt("storedItemID"));
-			SetstoredItemAmount(tag.GetInt("storedItemAmount"));
+            chestInventoryList = (List<Item>)tag.GetList<Item>("chestInventoryList");
 		}
 
 
-
-
-
-        // Im using "Get / Set" functions for these
-        public bool GetIsEmpty() {
-			return isEmpty;
-		}
-
-		public void SetIsEmpty(bool _val) {
-            
-            /* Thought this could be a way to make the chest unbreakable
-            if (_val == true) {
-                chest.MinPick = 0;
+        public bool AnyItemsStored() {
+            if (chestInventoryList.Count > 0) {
+                return true;
             } else {
-                chest.MinPick = 1000; // When we have items in the chest this makes it unminable?
+                return false;
             }
-            */
-            
-			isEmpty = _val;
 		}
 
-		public int GetStoredItemID() {
-			return storedItemID;
-		}
-
-		public void SetstoredItemID(int _val) {
-			storedItemID = _val;
-		}
-
-		public int GetStoredItemAmount() {
-			return storedItemAmount;
-		}
-
-		public void SetstoredItemAmount(int _val) {
-			storedItemAmount = _val;
-		}
-
-
-
-
-
-
-
-
-
+        public int ItemCount() {
+            var counter = 0;
+            foreach (Item item_temp in chestInventoryList) {
+                counter += item_temp.stack;
+            }
+            return counter;
+        }
 
 
         // Tries to deposit the item functions
@@ -142,7 +103,6 @@ namespace ShimmerChest.Furniture
             }
 
 			return changed;
-
         }
 
         public void DepositItem(Item toDeposit, bool quick_stack)
@@ -153,37 +113,85 @@ namespace ShimmerChest.Furniture
             
             // Here we deposit the item
             if (quick_stack) {
-                // Only deposit if there already is an item there
-                if (!isEmpty && storedItemID == toDeposit.type) {
+
+                // Only deposit if there already is an item there with correct type
+                if (AnyItemsStored() && chestInventoryList[0].type == toDeposit.type) {
                     DepositItemFinal(toDeposit);
-                    toDeposit.TurnToAir();
                 }
+
             } else {
-                // If our shimmer chest is empty or if the stored_item_id is the same as the item we are depositing
-                if (isEmpty || storedItemID == toDeposit.type) {
+                // Only deposit if the chest is empty or if the type is correct
+                if (!AnyItemsStored() || chestInventoryList[0].type == toDeposit.type) {
                     DepositItemFinal(toDeposit);
-                    toDeposit.TurnToAir();
                 }
             }
 
-
-            
-
 		}
 
-		public void DepositItemFinal(Item toDeposit)
+        public void DepositItemFinal(Item toDeposit)
 		{
-
-			// Make the stored item type correct
-			storedItemID = toDeposit.type;
-			// Add the correct amount of items
-			storedItemAmount += toDeposit.stack;
-			if (toDeposit.stack > 0) {
-				isEmpty = false;
-			}
-
+            var item_shallow_clone = (Item)toDeposit.Clone();
+            chestInventoryList.Add(item_shallow_clone);
+            chestInventoryList = UpdateAndCombineStacksNew();
+            toDeposit.TurnToAir();
 		}
 
+        // This will update the "chestInventoryList" so that all stacks that can combine will combine
+        // Making the list as short as possible O(2n)
+        public List<Item> UpdateAndCombineStacksNew() {
+
+            if (AnyItemsStored() && chestInventoryList[0].maxStack > 1) {
+                
+                var stack_limit = chestInventoryList[0].maxStack;
+                var type_id = chestInventoryList[0].type;
+                List<Item> newList = new List<Item>();
+
+                var total_items_stored = 0;
+                foreach (Item item in chestInventoryList) {
+                    total_items_stored += item.stack;
+                }
+
+                while (total_items_stored >= stack_limit) {
+
+                    Item newItem = new Item();
+                    newItem.SetDefaults(type_id);
+                    newItem.stack = stack_limit;
+                    newList.Add(newItem);
+
+                    total_items_stored -= stack_limit;
+                }
+                if (total_items_stored > 0) {
+
+                    Item newItem = new Item();
+                    newItem.SetDefaults(type_id);
+                    newItem.stack = total_items_stored;
+                    newList.Add(newItem);
+
+                }
+
+                return newList;
+
+            } else {
+                return chestInventoryList;
+            }
+        }
+
+
+
+
+
+        // Will remove the "_stack" amount of items from the item at index "_index"
+        public void RemoveItems(int _index, int _stack) {
+            
+            if (_stack >= chestInventoryList[_index].stack) {
+                chestInventoryList.RemoveAt(_index);
+            } else {
+                chestInventoryList[_index].stack -= _stack;
+            }
+
+            UpdateAndCombineStacksNew();
+            
+        }
 
 
 

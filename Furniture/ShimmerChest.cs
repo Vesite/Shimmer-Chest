@@ -124,21 +124,13 @@ namespace ShimmerChest.Furniture
 			ShimmerChestTileEntity shimmerChestTileEntity;
 			TileUtils.TryGetTileEntityAs(i, j, out shimmerChestTileEntity);
 
-			if (!shimmerChestTileEntity.GetIsEmpty()) {
+			if (shimmerChestTileEntity.AnyItemsStored()) {
 				
-				// Set variables
-				int stored_item_amount = shimmerChestTileEntity.GetStoredItemAmount();
-				Item newItem = new Item();
-                newItem.SetDefaults(shimmerChestTileEntity.GetStoredItemID());
-				int stored_item_max_stack = newItem.maxStack;
+				foreach (Item item_temp in shimmerChestTileEntity.chestInventoryList)
+        		{
+					Main.LocalPlayer.QuickSpawnItem(new EntitySource_TileEntity(shimmerChestTileEntity), item_temp, item_temp.stack);
+				}
 
-				// Throw out all the items on the player
-				while (stored_item_amount > stored_item_max_stack) {
-                    Main.LocalPlayer.QuickSpawnItem(new EntitySource_TileEntity(shimmerChestTileEntity), newItem, stored_item_max_stack);
-                    stored_item_amount -= stored_item_max_stack;
-                }
-				Main.LocalPlayer.QuickSpawnItem(new EntitySource_TileEntity(shimmerChestTileEntity), newItem, stored_item_amount);
-				
 			}
 
 			shimmerChestTileEntity.Kill(i, j);
