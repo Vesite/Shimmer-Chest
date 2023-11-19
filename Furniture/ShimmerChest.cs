@@ -45,8 +45,8 @@ namespace ShimmerChest.Furniture
 
 			AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntry0"), MapChestName);
 
-			// Placement
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+            // Placement
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
 			TileObjectData.newTile.Origin = new Point16(0, 1);
 			TileObjectData.newTile.CoordinateHeights = new[] { 16, 18 };
 
@@ -90,32 +90,30 @@ namespace ShimmerChest.Furniture
 			return true;
 		}
 
-
-
-		
-
-
-
 		// Some functuion for the chest name, changed some stuff here so it is only in english and removed some code.
 		public static string MapChestName(string name, int i, int j) {
-			int left = i;
-			int top = j;
-			Tile tile = Main.tile[i, j];
-			if (tile.TileFrameX % 36 != 0) {
-				left--;
-			}
+			return "Shimmer Chest";
 
-			if (tile.TileFrameY != 0) {
-				top--;
-			}
+			//int left = i;
+			//int top = j;
+			//Tile tile = Main.tile[i, j];
+			//if (tile.TileFrameX % 36 != 0) {
+			//	left--;
+			//}
 
-			int chest = Chest.FindChest(left, top);
+			//if (tile.TileFrameY != 0) {
+			//	top--;
+			//}
 
-			if (Main.chest[chest].name == "") {
-				return "Shimmer Chest";
-			}
+			//int chest = Chest.FindChest(left, top);
+   //         return "Shimmer Chest"
 
-			return "Shimmer Chest" + ": " + Main.chest[chest].name;
+
+   //         if (Main.chest[chest].name == "") {
+			//	return "Shimmer Chest";
+			//}
+
+			//return "Shimmer Chest"// + ": " + Main.chest[chest].name;
 		}
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY) {

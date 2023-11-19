@@ -41,17 +41,6 @@ namespace ShimmerChest
 
 
 
-
-
-
-
-
-
-
-
-
-
-
         // ?
         public Point16 ViewingStorage() => storageAccess2D;
 
